@@ -1,0 +1,91 @@
+// app/measurement/start/components/Step5Placement.tsx
+'use client';
+
+import { Button } from '@/components/ui/button';
+import { SensorUnit } from '@/components/SensorUnit';
+
+interface Person {
+  id: number;
+  name: string;
+  sensorSet: string;
+}
+
+interface Step5PlacementProps {
+  selectedPerson: Person;
+  onStepComplete: () => void;
+}
+
+export default function Step5Placement({ selectedPerson, onStepComplete }: Step5PlacementProps) {
+  return (
+    <div className="h-full flex flex-col">
+      <h2 className="text-xl font-medium mb-4">
+        Attach each sensor to its correct position
+      </h2>
+      
+      <div className="flex-1 grid grid-cols-3 gap-6">
+        <div className="flex flex-col items-center">
+          <SensorUnit 
+            sensorSet={selectedPerson.sensorSet} 
+            location="L" 
+            lightStatus="blinking-blue" 
+            className="w-24 h-32 mb-3"
+          />
+          <div className="text-center">
+            <h3 className="font-medium">Left Arm</h3>
+            <p className="text-sm text-muted-foreground">
+              Attach to left arm band
+            </p>
+          </div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <SensorUnit 
+            sensorSet={selectedPerson.sensorSet} 
+            location="W" 
+            lightStatus="blinking-blue" 
+            className="w-24 h-32 mb-3"
+          />
+          <div className="text-center">
+            <h3 className="font-medium">Waist</h3>
+            <p className="text-sm text-muted-foreground">
+              Attach to waist belt
+            </p>
+          </div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <SensorUnit 
+            sensorSet={selectedPerson.sensorSet} 
+            location="R" 
+            lightStatus="blinking-blue" 
+            className="w-24 h-32 mb-3"
+          />
+          <div className="text-center">
+            <h3 className="font-medium">Right Arm</h3>
+            <p className="text-sm text-muted-foreground">
+              Attach to right arm band
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <div className="mt-6 bg-blue-50 p-4 rounded-lg">
+        <h3 className="font-medium text-blue-800 mb-2">Important:</h3>
+        <ul className="text-sm text-blue-700 space-y-1">
+          <li>• Ensure sensors are securely attached to avoid movement</li>
+          <li>• All sensors should be blinking blue during measurement</li>
+          <li>• Keep sensors away from water and excessive heat</li>
+        </ul>
+      </div>
+      
+      <div className="mt-4">
+        <Button 
+          onClick={onStepComplete}
+          className="w-full"
+        >
+          Complete Setup
+        </Button>
+      </div>
+    </div>
+  );
+}

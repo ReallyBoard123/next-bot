@@ -11,6 +11,8 @@ datasource db {
 model MeasurementSession {
   id             Int               @id @default(autoincrement())
   sensorSet      String            // e.g. "32-A" to "32-H"
+  personId       Int?              // Optional link to a person
+  person         Person?           @relation(fields: [personId], references: [id])
   startedAt      DateTime          @default(now())
   endedAt        DateTime?
   status         MeasurementStatus @default(IN_PROGRESS)
@@ -33,6 +35,15 @@ model MeasurementStep {
   updatedAt       DateTime           @updatedAt
 }
 
+model Person {
+  id                Int                 @id @default(autoincrement())
+  name              String
+  sensorSet         String              // e.g. "32-A" to "32-H"
+  measurementSessions MeasurementSession[]
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+}
+
 enum MeasurementStatus {
   IN_PROGRESS
   COMPLETED
@@ -40,11 +51,15 @@ enum MeasurementStatus {
 }
 
 enum StepType {
-  // Start workflow steps
+  // Start workflow steps - we're keeping the old value for compatibility
   START_DECK_LIGHT
-  START_SENSOR_SELECTION
+  START_SENSOR_SELECTION  // Keep this for compatibility with existing DB records
   START_REMOVE_SENSORS
   START_PLACE_SENSORS
+  
+  // New step types
+  START_SELECT_PERSON    // New step for person selection
+  START_SENSOR_LIGHT     // New step for sensor light check
   
   // End workflow steps
   END_REMOVE_SENSORS
