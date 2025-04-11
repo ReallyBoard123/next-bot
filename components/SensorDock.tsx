@@ -1,13 +1,12 @@
 // components/SensorDock.tsx
 import React from 'react';
-import { SensorUnit } from './SensorUnit';
+import { SensorUnit, type SensorSet } from './SensorUnit';
+import { LightIndicator, type LightStatus } from './LightIndicator';
 import { cn } from '@/lib/utils';
-
-type LightStatus = 'green' | 'blue' | 'orange' | 'blinking-blue' | 'white-blue' | 'none';
 
 interface SensorDockProps {
   selectedSet?: string;
-  onSelectSet?: (sensorSet: string) => void;
+  onSelectSet?: (sensorSet: SensorSet) => void;
   sensorLightStatus?: LightStatus;
   dockLightStatus?: LightStatus;
   className?: string;
@@ -22,95 +21,112 @@ export function SensorDock({
   className,
   showLabels = true,
 }: SensorDockProps) {
-  // Create array of all sensor sets
-  const sensorSets = ['32-A', '32-B', '32-C', '32-D', '32-E', '32-F', '32-G', '32-H'];
+  // Define sensor sets for left and right sides
+  const leftSensorSets: SensorSet[] = ['32-A', '32-B', '32-C', '32-D'];
+  const rightSensorSets: SensorSet[] = ['32-E', '32-F', '32-G', '32-H'];
   
   return (
-    <div className={cn('p-4 bg-gray-100 rounded-lg', className)}>
+    <div className={cn('p-6 bg-gray-200 rounded-3xl shadow-inner', className)}>
       {showLabels && (
-        <h3 className="text-center mb-3 font-medium">Sensor Dock</h3>
+        <h3 className="text-center mb-4 font-medium">Sensor Dock</h3>
       )}
       
-      <div className="grid grid-cols-4 gap-4">
-        {sensorSets.slice(0, 4).map((set) => (
-          <div 
-            key={set}
-            className={cn(
-              'flex flex-col items-center', 
-              selectedSet === set && 'ring-2 ring-blue-600 rounded-lg p-1'
-            )}
-            onClick={() => onSelectSet?.(set)}
-          >
-            <div className="flex gap-1 justify-center mb-1">
+      <div className="grid grid-cols-7 gap-2">
+        {/* Left side - Sets A-D */}
+        <div className="col-span-3 grid grid-rows-4 gap-4">
+          {leftSensorSets.map((set) => (
+            <div 
+              key={set}
+              className={cn(
+                'flex justify-center gap-2',
+                selectedSet === set && 'ring-2 ring-blue-600 rounded-lg p-1 bg-blue-50'
+              )}
+              onClick={() => onSelectSet?.(set)}
+            >
               <SensorUnit 
                 sensorSet={set} 
                 location="L" 
                 lightStatus={selectedSet === set ? sensorLightStatus : 'none'} 
-                className="w-14 h-20 text-xs"
               />
               <SensorUnit 
                 sensorSet={set} 
                 location="W" 
                 lightStatus={selectedSet === set ? sensorLightStatus : 'none'} 
-                className="w-14 h-20 text-xs"
               />
               <SensorUnit 
                 sensorSet={set} 
                 location="R" 
                 lightStatus={selectedSet === set ? sensorLightStatus : 'none'} 
-                className="w-14 h-20 text-xs"
               />
             </div>
-            {selectedSet === set && (
-              <div className={cn(
-                'h-2 w-2 rounded-full mb-1',
-                dockLightStatus === 'blue' ? 'bg-blue-500' : 
-                dockLightStatus === 'white-blue' ? 'bg-sky-200' : 'bg-gray-300'
-              )}></div>
-            )}
-            <div className="text-xs font-semibold">{set}</div>
-          </div>
-        ))}
+          ))}
+        </div>
         
-        {sensorSets.slice(4, 8).map((set) => (
-          <div 
-            key={set}
-            className={cn(
-              'flex flex-col items-center', 
-              selectedSet === set && 'ring-2 ring-blue-600 rounded-lg p-1'
-            )}
-            onClick={() => onSelectSet?.(set)}
-          >
-            <div className="flex gap-1 justify-center mb-1">
+        {/* Middle - Dock lights */}
+        <div className="col-span-1 flex flex-col justify-around items-center">
+          {[1, 2, 3, 4].map((index) => (
+            <div key={index} className="flex flex-row items-center gap-2">
+              {/* Special staggered animation for white-blue data transfer */}
+              {dockLightStatus === 'white-blue' ? (
+                <>
+                  <div className={`animate-delay-${index * 150}`}>
+                    <LightIndicator
+                      status={dockLightStatus}
+                      type="dock"
+                    />
+                  </div>
+                  <div className={`animate-delay-${(index * 150 + 300) % 1200}`}>
+                    <LightIndicator
+                      status={dockLightStatus}
+                      type="dock"
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <LightIndicator
+                    status={dockLightStatus}
+                    type="dock"
+                  />
+                  <LightIndicator
+                    status={dockLightStatus}
+                    type="dock"
+                  />
+                </>
+              )}
+            </div>
+          ))}
+        </div>
+        
+        {/* Right side - Sets E-H */}
+        <div className="col-span-3 grid grid-rows-4 gap-4">
+          {rightSensorSets.map((set) => (
+            <div 
+              key={set}
+              className={cn(
+                'flex justify-center gap-2',
+                selectedSet === set && 'ring-2 ring-blue-600 rounded-lg p-1 bg-blue-50'
+              )}
+              onClick={() => onSelectSet?.(set)}
+            >
               <SensorUnit 
                 sensorSet={set} 
                 location="L" 
                 lightStatus={selectedSet === set ? sensorLightStatus : 'none'} 
-                className="w-14 h-20 text-xs"
               />
               <SensorUnit 
                 sensorSet={set} 
                 location="W" 
                 lightStatus={selectedSet === set ? sensorLightStatus : 'none'} 
-                className="w-14 h-20 text-xs"
               />
               <SensorUnit 
                 sensorSet={set} 
                 location="R" 
                 lightStatus={selectedSet === set ? sensorLightStatus : 'none'} 
-                className="w-14 h-20 text-xs"
               />
             </div>
-            {selectedSet === set && (
-              <div className={cn(
-                'h-2 w-2 rounded-full mb-1',
-                dockLightStatus === 'blue' ? 'bg-blue-500' : 
-                dockLightStatus === 'white-blue' ? 'bg-sky-200' : 'bg-gray-300'
-              )}></div>
-            )}
-            <div className="text-xs font-semibold">{set}</div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
