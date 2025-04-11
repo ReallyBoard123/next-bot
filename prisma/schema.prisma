@@ -1,0 +1,54 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model MeasurementSession {
+  id             Int               @id @default(autoincrement())
+  sensorSet      String            // e.g. "32-A" to "32-H"
+  startedAt      DateTime          @default(now())
+  endedAt        DateTime?
+  status         MeasurementStatus @default(IN_PROGRESS)
+  dataUploaded   Boolean           @default(false)
+  steps          MeasurementStep[]
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+}
+
+model MeasurementStep {
+  id              Int                @id @default(autoincrement())
+  sessionId       Int
+  session         MeasurementSession @relation(fields: [sessionId], references: [id])
+  stepNumber      Int
+  stepType        StepType
+  completed       Boolean            @default(false)
+  completedAt     DateTime?
+  feedback        String?            // Any additional feedback/notes from user
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+}
+
+enum MeasurementStatus {
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
+enum StepType {
+  // Start workflow steps
+  START_DECK_LIGHT
+  START_SENSOR_SELECTION
+  START_REMOVE_SENSORS
+  START_PLACE_SENSORS
+  
+  // End workflow steps
+  END_REMOVE_SENSORS
+  END_RETURN_SENSORS
+  END_CHECK_LIGHTS
+  END_DATA_UPLOAD
+}
