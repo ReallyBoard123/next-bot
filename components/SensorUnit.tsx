@@ -17,14 +17,14 @@ interface SensorUnitProps {
 
 // Mapping sensor sets to background and border colors
 const sensorSetStyles: Record<string, { bg: string; border: string }> = {
-  '32-A': { bg: '#2965B4', border: '#D0D2D3' },
-  '32-B': { bg: '#D0D2D3', border: '#2965B4' },
-  '32-C': { bg: '#89B1D6', border: '#D0D2D3' },
-  '32-D': { bg: '#D0D2D3', border: '#89B1D6' },
-  '32-E': { bg: '#EDB159', border: '#D0D2D3' },
-  '32-F': { bg: '#D0D2D3', border: '#EDB159' },
-  '32-G': { bg: 'black', border: '#D0D2D3' },
-  '32-H': { bg: '#D0D2D3', border: 'black' },
+  '32-A': { bg: '#D0D2D3', border: '#2965B4' },
+  '32-B': { bg: '#2965B4', border: '#D0D2D3' },
+  '32-C': { bg: '#D0D2D3', border: '#89B1D6' },
+  '32-D': { bg: '#89B1D6', border: '#D0D2D3' },
+  '32-E': { bg: '#D0D2D3', border: '#EDB159' },
+  '32-F': { bg: '#EDB159', border: '#D0D2D3' },
+  '32-G': { bg: '#D0D2D3', border: 'black' },
+  '32-H': { bg: 'black', border: '#D0D2D3' },
 };
 
 export function SensorUnit({
