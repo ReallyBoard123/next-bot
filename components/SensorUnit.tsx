@@ -1,17 +1,31 @@
 // components/SensorUnit.tsx
 import React from 'react';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
-type SensorLocation = 'L' | 'W' | 'R'; // Left, Waist, Right
-type LightStatus = 'green' | 'blue' | 'orange' | 'blinking-blue' | 'white-blue' | 'none';
+export type SensorLocation = 'L' | 'W' | 'R'; // Left, Waist, Right
+export type LightStatus = 'green' | 'blue' | 'orange' | 'blinking-blue' | 'blinking-red' | 'white-blue' | 'none';
+export type SensorSet = '32-A' | '32-B' | '32-C' | '32-D' | '32-E' | '32-F' | '32-G' | '32-H';
 
 interface SensorUnitProps {
-  sensorSet: string; // e.g. "32-A" to "32-H"
+  sensorSet: string;
   location: SensorLocation;
   lightStatus: LightStatus;
   className?: string;
   onClick?: () => void;
 }
+
+// Mapping sensor sets to background and border colors
+const sensorSetStyles: Record<string, { bg: string; border: string }> = {
+  '32-A': { bg: '#2965B4', border: '#D0D2D3' },
+  '32-B': { bg: '#D0D2D3', border: '#2965B4' },
+  '32-C': { bg: '#89B1D6', border: '#D0D2D3' },
+  '32-D': { bg: '#D0D2D3', border: '#89B1D6' },
+  '32-E': { bg: '#EDB159', border: '#D0D2D3' },
+  '32-F': { bg: '#D0D2D3', border: '#EDB159' },
+  '32-G': { bg: 'black', border: '#D0D2D3' },
+  '32-H': { bg: '#D0D2D3', border: 'black' },
+};
 
 export function SensorUnit({
   sensorSet,
@@ -20,49 +34,30 @@ export function SensorUnit({
   className,
   onClick,
 }: SensorUnitProps) {
-  // Get appropriate sensor icon based on location
-  const getLocationIcon = () => {
-    switch (location) {
-      case 'L':
-        return (
-          <svg viewBox="0 0 24 24" className="w-6 h-6 fill-white">
-            <path d="M18 4v16H6V4h12m1-1H5v18h14V3z" />
-            <path d="M13 16h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V6h2v2z" />
-          </svg>
-        );
-      case 'R':
-        return (
-          <svg viewBox="0 0 24 24" className="w-6 h-6 fill-white">
-            <path d="M18 4v16H6V4h12m1-1H5v18h14V3z" />
-            <path d="M13 16h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V6h2v2z" />
-          </svg>
-        );
-      case 'W':
-        return (
-          <svg viewBox="0 0 24 24" className="w-6 h-6 fill-white">
-            <path d="M18 8v8H6V8h12m1-1H5v10h14V7z" />
-            <path d="M15 10H9v2h6v-2z" />
-          </svg>
-        );
+  // Get colors for the current sensor set
+  const styles = sensorSetStyles[sensorSet] || { bg: '#2965B4', border: '#E7E8E7' };
+  
+  // Get light indicator color
+  const getLightColor = () => {
+    switch (lightStatus) {
+      case 'green': return 'bg-green-500';
+      case 'blue': return 'bg-blue-500';
+      case 'orange': return 'bg-orange-500';
+      case 'blinking-blue': return 'bg-blue-500 animate-pulse';
+      case 'blinking-red': return 'bg-red-500 animate-pulse';
+      case 'white-blue': return 'bg-sky-200';
+      case 'none':
+      default: return 'bg-gray-300';
     }
   };
 
-  // Get appropriate CSS class for the light indicator
-  const getLightStatusClass = () => {
-    switch (lightStatus) {
-      case 'green':
-        return 'bg-green-500';
-      case 'blue':
-        return 'bg-blue-500';
-      case 'orange':
-        return 'bg-orange-500';
-      case 'blinking-blue':
-        return 'bg-blue-500 animate-pulse';
-      case 'white-blue':
-        return 'bg-sky-200';
-      case 'none':
-      default:
-        return 'bg-gray-300';
+  // Get SVG for each location
+  const getLocationSvg = () => {
+    switch (location) {
+      case 'L': return '/sensor/left.svg';
+      case 'R': return '/sensor/right.svg';
+      case 'W': return '/sensor/belt.svg';
+      default: return '';
     }
   };
 
@@ -70,21 +65,65 @@ export function SensorUnit({
     <div
       onClick={onClick}
       className={cn(
-        'relative w-20 h-28 bg-blue-600 text-white rounded border-2 border-gray-300 flex flex-col items-center',
+        'relative w-20 h-28 text-white rounded-lg flex flex-col items-center',
+        'border-4 shadow-md transition-colors',
         onClick && 'cursor-pointer',
         className
       )}
+      style={{ 
+        backgroundColor: styles.bg,
+        borderColor: styles.border,
+      }}
     >
-      <div className="text-sm font-bold mt-1">{sensorSet}</div>
-      <div className="text-lg font-bold">{location}</div>
-      
-      <div className="flex-grow flex items-center justify-center">
-        {getLocationIcon()}
+      {/* Sensor set name at top-left with location underneath */}
+      <div className="absolute top-1 left-2 flex flex-col items-start">
+        <div className={cn(
+          "text-sm font-bold",
+          (styles.bg === '#D0D2D3' || styles.bg === '#E7E8E7') ? "text-blue-800" : "text-white"
+        )}>
+          {sensorSet}
+        </div>
+        <div className={cn(
+          "text-sm font-bold",
+          (styles.bg === '#D0D2D3' || styles.bg === '#E7E8E7') ? "text-black" : "text-white"
+        )}>
+          {location}
+        </div>
       </div>
       
+      {/* Light indicator with ring at bottom-left */}
       {lightStatus !== 'none' && (
-        <div className={cn('absolute bottom-2 left-2 w-4 h-4 rounded-full', getLightStatusClass())}></div>
+        <div className="absolute bottom-2 left-2 flex items-center justify-center">
+          <div className={cn(
+            'w-5 h-5 rounded-full', 
+            getLightColor(),
+            'ring-2 ring-opacity-80',
+            lightStatus === 'green' ? 'ring-green-700' :
+            lightStatus === 'blue' || lightStatus === 'blinking-blue' ? 'ring-blue-700' :
+            lightStatus === 'orange' ? 'ring-orange-700' :
+            lightStatus === 'blinking-red' ? 'ring-red-700' : 'ring-gray-500'
+          )}></div>
+        </div>
       )}
+
+      {/* SVG image based on location */}
+      <div className={cn(
+        "absolute",
+        location === 'W' ? "inset-0 flex items-center justify-center" : "bottom-0 right-[-6px]"
+      )}>
+        <div className={cn(
+          "relative",
+          location === 'W' ? "w-14 h-14" : "w-16 h-16"
+        )}>
+          <Image 
+            src={getLocationSvg()}
+            alt={`${location} sensor`}
+            width={location === 'W' ? 56 : 64}
+            height={location === 'W' ? 56 : 64}
+            className="object-contain"
+          />
+        </div>
+      </div>
     </div>
   );
 }
