@@ -6,9 +6,10 @@ import { useRouter } from 'next/navigation';
 import { StepType, MeasurementStatus } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+
+import { Check, ChevronLeft, ChevronRight, AlertCircle } from 'lucide-react';
 import { SensorDock } from '@/components/SensorDock';
 import { SensorUnit } from '@/components/SensorUnit';
-import { Check, ChevronLeft, ChevronRight, AlertCircle } from 'lucide-react';
 
 // Step definitions for the end workflow
 const steps = [
