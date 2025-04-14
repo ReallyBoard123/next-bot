@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { SensorUnit } from '@/components/SensorUnit';
 import { LightIndicator, type LightStatus } from '@/components/LightIndicator';
-import { Check, AlertCircle, Clock } from 'lucide-react';
+import { Check, AlertCircle, Clock, ArrowLeft } from 'lucide-react';
 
 type LightCheckStatus = 'unchecked' | 'correct' | 'incorrect';
 
@@ -18,9 +18,14 @@ interface Person {
 interface Step3SensorLightProps {
   selectedPerson: Person;
   onStepComplete: () => void;
+  onStepBack: () => void;
 }
 
-export default function Step3SensorLight({ selectedPerson, onStepComplete }: Step3SensorLightProps) {
+export default function Step3SensorLight({ 
+  selectedPerson, 
+  onStepComplete, 
+  onStepBack 
+}: Step3SensorLightProps) {
   const [sensorLightStatus, setSensorLightStatus] = useState<LightStatus>('none');
   const [lightCheckStatus, setLightCheckStatus] = useState<LightCheckStatus>('unchecked');
   const [message, setMessage] = useState('');
@@ -165,11 +170,19 @@ export default function Step3SensorLight({ selectedPerson, onStepComplete }: Ste
         </div>
       )}
       
-      <div className="mt-auto">
+      <div className="mt-auto flex justify-between">
+        <Button 
+          variant="outline" 
+          onClick={onStepBack}
+          className="flex items-center"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back
+        </Button>
+        
         <Button 
           onClick={handleContinue}
           disabled={lightCheckStatus !== 'correct' || waitCountdown > 0}
-          className="w-full"
         >
           Continue
         </Button>

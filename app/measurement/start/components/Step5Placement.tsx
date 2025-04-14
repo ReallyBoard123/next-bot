@@ -3,6 +3,7 @@
 
 import { Button } from '@/components/ui/button';
 import { SensorUnit } from '@/components/SensorUnit';
+import { ArrowLeft } from 'lucide-react';
 
 interface Person {
   id: number;
@@ -13,9 +14,14 @@ interface Person {
 interface Step5PlacementProps {
   selectedPerson: Person;
   onStepComplete: () => void;
+  onStepBack: () => void;
 }
 
-export default function Step5Placement({ selectedPerson, onStepComplete }: Step5PlacementProps) {
+export default function Step5Placement({ 
+  selectedPerson, 
+  onStepComplete, 
+  onStepBack 
+}: Step5PlacementProps) {
   return (
     <div className="h-full flex flex-col">
       <h2 className="text-xl font-medium mb-4">
@@ -78,10 +84,18 @@ export default function Step5Placement({ selectedPerson, onStepComplete }: Step5
         </ul>
       </div>
       
-      <div className="mt-4">
+      <div className="mt-4 flex justify-between">
+        <Button 
+          variant="outline" 
+          onClick={onStepBack}
+          className="flex items-center"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back
+        </Button>
+        
         <Button 
           onClick={onStepComplete}
-          className="w-full"
         >
           Complete Setup
         </Button>

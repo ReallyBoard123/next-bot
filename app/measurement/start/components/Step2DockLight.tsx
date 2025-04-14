@@ -4,15 +4,16 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { LightIndicator, type LightStatus } from '@/components/LightIndicator';
-import { Check, AlertCircle, Clock } from 'lucide-react';
+import { Check, AlertCircle, Clock, ArrowLeft } from 'lucide-react';
 
 type LightCheckStatus = 'unchecked' | 'correct' | 'incorrect';
 
 interface Step2DockLightProps {
   onStepComplete: () => void;
+  onStepBack: () => void;
 }
 
-export default function Step2DockLight({ onStepComplete }: Step2DockLightProps) {
+export default function Step2DockLight({ onStepComplete, onStepBack }: Step2DockLightProps) {
   const [dockLightStatus, setDockLightStatus] = useState<LightStatus>('none');
   const [lightCheckStatus, setLightCheckStatus] = useState<LightCheckStatus>('unchecked');
   const [message, setMessage] = useState('');
@@ -146,14 +147,22 @@ export default function Step2DockLight({ onStepComplete }: Step2DockLightProps) 
         </div>
       )}
       
-      <div className="mt-auto">
+      <div className="mt-auto flex justify-between">
+        <Button 
+          variant="outline" 
+          onClick={onStepBack}
+          className="flex items-center"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back
+        </Button>
+        
         <Button 
           onClick={handleContinue}
           disabled={
             lightCheckStatus === 'unchecked' || 
             (lightCheckStatus === 'incorrect' && waitCountdown > 0 && dockLightStatus !== 'green')
           }
-          className="w-full"
         >
           Continue
         </Button>

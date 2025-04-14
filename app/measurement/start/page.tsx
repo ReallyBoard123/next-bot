@@ -5,8 +5,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { StepType } from '@prisma/client';
-import { Button } from '@/components/ui/button';
-import { Check, ChevronLeft } from 'lucide-react';
+import { Check, ChevronLeft, AlertCircle } from 'lucide-react';
 import { LightStatus } from '@/components/LightIndicator';
 
 // Import step components
@@ -119,6 +118,15 @@ export default function StartMeasurement() {
     }
   };
   
+  // Handle going back to previous step
+  const handleStepBack = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    } else {
+      router.push('/');
+    }
+  };
+
   // Render step content based on current step
   const renderStepContent = () => {
     switch (currentStep) {
@@ -133,6 +141,7 @@ export default function StartMeasurement() {
         return (
           <Step2DockLight
             onStepComplete={handleStepComplete}
+            onStepBack={handleStepBack}
           />
         );
       case 2:
@@ -143,6 +152,7 @@ export default function StartMeasurement() {
               setSensorLightStatus('green'); // Save the light status
               handleStepComplete();
             }}
+            onStepBack={handleStepBack}
           />
         ) : null;
       case 3:
@@ -151,6 +161,7 @@ export default function StartMeasurement() {
             selectedPerson={selectedPerson}
             sensorLightStatus={sensorLightStatus}
             onStepComplete={handleStepComplete}
+            onStepBack={handleStepBack}
           />
         ) : null;
       case 4:
@@ -158,6 +169,7 @@ export default function StartMeasurement() {
           <Step5Placement
             selectedPerson={selectedPerson}
             onStepComplete={handleStepComplete}
+            onStepBack={handleStepBack}
           />
         ) : null;
       default:
@@ -183,13 +195,25 @@ export default function StartMeasurement() {
         {/* Left sidebar - steps */}
         <div className="col-span-4 bg-white rounded-lg border p-3">
           {steps.map((step, index) => (
-            <div key={step.id} className={`flex items-start mb-2 ${
-              index === currentStep 
-                ? 'text-blue-600 bg-blue-50 p-2 rounded-md' 
-                : index < currentStep 
-                  ? 'text-green-600 p-2' 
-                  : 'text-gray-500 p-2'
-            }`}>
+            <div 
+              key={step.id} 
+              className={`flex items-start mb-2 ${
+                index === currentStep 
+                  ? 'text-blue-600 bg-blue-50 p-2 rounded-md' 
+                  : index < currentStep 
+                    ? 'text-green-600 p-2' 
+                    : 'text-gray-500 p-2'
+              }`}
+              onClick={() => {
+                // Allow clicking on completed steps to go back
+                if (index < currentStep) {
+                  setCurrentStep(index);
+                }
+              }}
+              style={{ 
+                cursor: index < currentStep ? 'pointer' : 'default' 
+              }}
+            >
               <div className={`
                 flex items-center justify-center w-7 h-7 rounded-full
                 ${index === currentStep 
@@ -212,8 +236,9 @@ export default function StartMeasurement() {
         <div className="col-span-8 bg-white rounded-lg border flex flex-col overflow-hidden">
           {/* Display error if any */}
           {error && (
-            <div className="p-3 m-2 bg-red-50 text-red-800 rounded-md text-sm">
-              {error}
+            <div className="p-3 m-2 bg-red-50 text-red-800 rounded-md text-sm flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+              <span>{error}</span>
             </div>
           )}
           
@@ -228,7 +253,7 @@ export default function StartMeasurement() {
               {currentStep === 0 && "Select your name from the list to get started."}
               {currentStep === 1 && "Check the color of the light on your sensor dock."}
               {currentStep === 2 && "Verify the color of the lights on your assigned sensors."}
-              {currentStep === 3 && "Remove the sensors and confirm they're blinking blue."}
+              {currentStep === 3 && "Drag each sensor upward to remove it from the dock."}
               {currentStep === 4 && "Attach each sensor to the correct position on your body."}
             </p>
           </div>
