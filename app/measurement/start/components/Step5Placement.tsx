@@ -38,9 +38,16 @@ export default function Step5Placement({
           />
           <div className="text-center">
             <h3 className="font-medium">Left Arm</h3>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground mb-2">
               Attach to left arm band
             </p>
+            <div className="h-48 w-48 relative">
+              <img 
+                src="/sensor/left.png" 
+                alt="Left arm placement" 
+                className="w-full h-full object-contain"
+              />
+            </div>
           </div>
         </div>
         
@@ -53,9 +60,16 @@ export default function Step5Placement({
           />
           <div className="text-center">
             <h3 className="font-medium">Waist</h3>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground mb-2">
               Attach to waist belt
             </p>
+            <div className="h-48 w-48 relative">
+              <img 
+                src="/sensor/waist.png" 
+                alt="Waist placement" 
+                className="w-full h-full object-contain"
+              />
+            </div>
           </div>
         </div>
         
@@ -68,9 +82,16 @@ export default function Step5Placement({
           />
           <div className="text-center">
             <h3 className="font-medium">Right Arm</h3>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground mb-2">
               Attach to right arm band
             </p>
+            <div className="h-48 w-48 relative">
+              <img 
+                src="/sensor/right.png" 
+                alt="Right arm placement" 
+                className="w-full h-full object-contain"
+              />
+            </div>
           </div>
         </div>
       </div>

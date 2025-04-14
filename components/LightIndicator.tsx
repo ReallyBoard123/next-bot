@@ -30,7 +30,7 @@ const sensorStatusMap: Record<LightStatus, StatusInfo> = {
   'blinking-red': { color: 'bg-red-500', ringColor: 'ring-red-700', animation: 'animate-pulse', meaning: 'Synchronisation in progress. Do not start measurement!' },
   'white-blue': { color: 'bg-sky-200', ringColor: 'ring-sky-400', meaning: 'Data transfer' },
   'red': { color: 'bg-red-500', ringColor: 'ring-red-700', meaning: 'Error' },
-  'none': { color: 'bg-gray-200', ringColor: 'ring-gray-300', meaning: 'No light' }
+  'none': { color: 'bg-transparent', ringColor: 'ring-gray-400', meaning: 'No light' }
 };
 
 // Status information for dock lights
@@ -48,7 +48,7 @@ const dockStatusMap: Record<LightStatus, StatusInfo> = {
   'yellow': { color: 'bg-yellow-400', ringColor: 'shadow-yellow-200/50', meaning: 'Charging' },
   'blinking-blue': { color: 'bg-blue-500', ringColor: 'shadow-blue-200/50', animation: 'animate-pulse', meaning: 'Data transfer in progress' },
   'blinking-red': { color: 'bg-red-500', ringColor: 'shadow-red-200/50', animation: 'animate-pulse', meaning: 'Error' },
-  'none': { color: 'bg-gray-200', ringColor: 'shadow-gray-200/50', meaning: 'No light' }
+  'none': { color: 'bg-transparent', ringColor: 'shadow-gray-200/50', meaning: 'No light' }
 };
 
 export function LightIndicator({ 

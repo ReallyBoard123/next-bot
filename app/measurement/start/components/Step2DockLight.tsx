@@ -14,7 +14,8 @@ interface Step2DockLightProps {
 }
 
 export default function Step2DockLight({ onStepComplete, onStepBack }: Step2DockLightProps) {
-  const [dockLightStatus, setDockLightStatus] = useState<LightStatus>('none');
+  // Default to blue light status instead of none
+  const [dockLightStatus, setDockLightStatus] = useState<LightStatus>('blue');
   const [lightCheckStatus, setLightCheckStatus] = useState<LightCheckStatus>('unchecked');
   const [message, setMessage] = useState('');
   const [waitCountdown, setWaitCountdown] = useState(0);
@@ -61,6 +62,10 @@ export default function Step2DockLight({ onStepComplete, onStepBack }: Step2Dock
       setLightCheckStatus('incorrect');
       setMessage('Data upload via pendrive successful. Please remove pendrive.');
       setWaitCountdown(0);
+    } else if (status === 'none') {
+      setLightCheckStatus('incorrect');
+      setMessage('No light detected. Please check if the dock is powered on.');
+      setWaitCountdown(0);
     } else {
       setLightCheckStatus('incorrect');
       setMessage('Unknown dock status. Please check the connection.');
@@ -81,7 +86,7 @@ export default function Step2DockLight({ onStepComplete, onStepBack }: Step2Dock
       <div className="mb-6 flex justify-center">
         <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center">
           <LightIndicator 
-            status={dockLightStatus !== 'none' ? dockLightStatus : 'blue'} 
+            status={dockLightStatus} 
             type="dock" 
             size="lg"
           />

@@ -26,7 +26,8 @@ export default function Step3SensorLight({
   onStepComplete, 
   onStepBack 
 }: Step3SensorLightProps) {
-  const [sensorLightStatus, setSensorLightStatus] = useState<LightStatus>('none');
+  // Default to green light status
+  const [sensorLightStatus, setSensorLightStatus] = useState<LightStatus>('green');
   const [lightCheckStatus, setLightCheckStatus] = useState<LightCheckStatus>('unchecked');
   const [message, setMessage] = useState('');
   const [waitCountdown, setWaitCountdown] = useState(0);
@@ -96,17 +97,17 @@ export default function Step3SensorLight({
           <SensorUnit 
             sensorSet={selectedPerson.sensorSet} 
             location="L" 
-            lightStatus={sensorLightStatus !== 'none' ? sensorLightStatus : 'green'} 
+            lightStatus={sensorLightStatus} 
           />
           <SensorUnit 
             sensorSet={selectedPerson.sensorSet} 
             location="W" 
-            lightStatus={sensorLightStatus !== 'none' ? sensorLightStatus : 'green'} 
+            lightStatus={sensorLightStatus} 
           />
           <SensorUnit 
             sensorSet={selectedPerson.sensorSet} 
             location="R" 
-            lightStatus={sensorLightStatus !== 'none' ? sensorLightStatus : 'green'} 
+            lightStatus={sensorLightStatus} 
           />
         </div>
       </div>

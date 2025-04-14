@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { SensorUnit, type SensorSet, type SensorLocation } from '@/components/SensorUnit';
 import { LightStatus } from '@/components/LightIndicator';
 import { cn } from '@/lib/utils';
+import { ArrowUp } from 'lucide-react';
 
 interface DraggableSensorUnitProps {
   sensorSet: SensorSet;
@@ -22,9 +23,19 @@ export function DraggableSensorUnit({
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragComplete, setIsDragComplete] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(true);
   const sensorRef = useRef<HTMLDivElement>(null);
   const initialPosition = useRef({ x: 0, y: 0 });
   const dragStartPosition = useRef({ x: 0, y: 0 });
+
+  // Animation effect for the arrow
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setIsAnimating(prev => !prev);
+    }, 1000);
+    
+    return () => clearInterval(intervalId);
+  }, []);
 
   // Reset position when component mounts
   useEffect(() => {
@@ -136,9 +147,22 @@ export function DraggableSensorUnit({
         lightStatus={lightStatus}
         className={cn(isDragComplete && 'opacity-75')}
       />
+      
       {!isDragComplete && (
-        <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 text-xs text-blue-500 whitespace-nowrap">
-          Drag sensor up ↑
+        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+          <div 
+            className={`absolute -top-12 left-1/2 transform -translate-x-1/2 flex flex-col items-center transition-all duration-300 ${
+              isAnimating ? 'translate-y-0' : 'translate-y-2'
+            }`}
+          >
+            <ArrowUp className="w-6 h-6 text-blue-500" />
+            <span className="text-xs text-blue-600 font-medium mt-1">Drag Up</span>
+          </div>
+          
+          {/* Dashed line indicating drag path */}
+          <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-0.5 h-6 bg-blue-300 border-dashed" 
+            style={{ borderStyle: 'dashed', borderWidth: '1px', borderColor: '#3b82f6' }}
+          ></div>
         </div>
       )}
     </div>
