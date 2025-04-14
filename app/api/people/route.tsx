@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// PUT /api/people/:id - Update a person
+// PUT /api/people - Update a person
 export async function PUT(request: NextRequest) {
   try {
     const data = await request.json();
@@ -123,7 +123,7 @@ export async function PUT(request: NextRequest) {
   }
 }
 
-// DELETE /api/people/:id - Delete a person
+// DELETE /api/people - Delete a person
 export async function DELETE(request: NextRequest) {
   try {
     const url = new URL(request.url);

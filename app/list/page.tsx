@@ -17,17 +17,6 @@ type Person = {
   sensorSet: string;
 };
 
-const initialPeople: Person[] = [
-  { id: 1, name: 'Chirag', sensorSet: '32-A' },
-  { id: 2, name: 'Alireza', sensorSet: '32-B' },
-  { id: 3, name: 'Kevin', sensorSet: '32-C' },
-  { id: 4, name: 'Chris', sensorSet: '32-D' },
-  { id: 5, name: 'Klara', sensorSet: '32-E' },
-  { id: 6, name: 'Jessica', sensorSet: '32-F' },
-  { id: 7, name: 'Utz', sensorSet: '32-G' },
-  { id: 8, name: 'Thomas', sensorSet: '32-H' },
-];
-
 export default function PersonListPage() {
   const [people, setPeople] = useState<Person[]>([]);
   const [newPerson, setNewPerson] = useState({ name: '', sensorSet: '' });
@@ -38,27 +27,26 @@ export default function PersonListPage() {
   const sensorSets = ['32-A', '32-B', '32-C', '32-D', '32-E', '32-F', '32-G', '32-H'];
   
   // Load people from database
-  useEffect(() => {
-    const fetchPeople = async () => {
-      try {
-        // In a real app, this would fetch from your API
-        const response = await fetch('/api/people');
-        
-        if (response.ok) {
-          const data = await response.json();
-          setPeople(data);
-        } else {
-          // For demo purposes, use initial data if API fails
-          setPeople(initialPeople);
-        }
-      } catch (error) {
-        console.error('Error fetching people:', error);
-        setPeople(initialPeople);
-      } finally {
-        setLoading(false);
+  const fetchPeople = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/people');
+      
+      if (response.ok) {
+        const data = await response.json();
+        setPeople(data);
+      } else {
+        toast.error("Failed to load people data");
       }
-    };
-    
+    } catch (error) {
+      console.error('Error fetching people:', error);
+      toast.error("Network error when loading data");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  useEffect(() => {
     fetchPeople();
   }, []);
   
@@ -79,18 +67,27 @@ export default function PersonListPage() {
     setSaving(true);
     
     try {
-      // In a real app, this would call your API
-      const newId = Math.max(0, ...people.map(p => p.id)) + 1;
-      const newPersonWithId = { ...newPerson, id: newId };
+      const response = await fetch('/api/people', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newPerson),
+      });
       
-      // Add to state
-      setPeople([...people, newPersonWithId]);
-      setNewPerson({ name: '', sensorSet: '' });
+      const data = await response.json();
       
-      toast.success("Person added successfully");
+      if (data.success) {
+        // Refresh the list
+        await fetchPeople();
+        setNewPerson({ name: '', sensorSet: '' });
+        toast.success("Person added successfully");
+      } else {
+        toast.error(data.error || "Failed to add person");
+      }
     } catch (error) {
       console.error('Error adding person:', error);
-      toast.error("Failed to add person");
+      toast.error("Network error when adding person");
     } finally {
       setSaving(false);
     }
@@ -111,17 +108,26 @@ export default function PersonListPage() {
     setSaving(true);
     
     try {
-      // In a real app, this would call your API
-      const updatedPeople = people.map(p => 
-        p.id === updatedPerson.id ? updatedPerson : p
-      );
+      const response = await fetch('/api/people', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedPerson),
+      });
       
-      setPeople(updatedPeople);
+      const data = await response.json();
       
-      toast.success("Person updated successfully");
+      if (data.success) {
+        // Refresh the list
+        await fetchPeople();
+        toast.success("Person updated successfully");
+      } else {
+        toast.error(data.error || "Failed to update person");
+      }
     } catch (error) {
       console.error('Error updating person:', error);
-      toast.error("Failed to update person");
+      toast.error("Network error when updating person");
     } finally {
       setSaving(false);
     }
@@ -132,14 +138,22 @@ export default function PersonListPage() {
     setSaving(true);
     
     try {
-      // In a real app, this would call your API
-      const updatedPeople = people.filter(p => p.id !== id);
-      setPeople(updatedPeople);
+      const response = await fetch(`/api/people?id=${id}`, {
+        method: 'DELETE',
+      });
       
-      toast.success("Person deleted successfully");
+      const data = await response.json();
+      
+      if (data.success) {
+        // Refresh the list
+        await fetchPeople();
+        toast.success("Person deleted successfully");
+      } else {
+        toast.error(data.error || "Failed to delete person");
+      }
     } catch (error) {
       console.error('Error deleting person:', error);
-      toast.error("Failed to delete person");
+      toast.error("Network error when deleting person");
     } finally {
       setSaving(false);
     }
