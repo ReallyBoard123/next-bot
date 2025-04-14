@@ -1,6 +1,7 @@
 // app/measurement/start/components/Step5Placement.tsx
 'use client';
 
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { SensorUnit } from '@/components/SensorUnit';
 import { ArrowLeft } from 'lucide-react';
@@ -42,10 +43,12 @@ export default function Step5Placement({
               Attach to left arm band
             </p>
             <div className="h-48 w-48 relative">
-              <img 
+              <Image 
                 src="/sensor/left.png" 
                 alt="Left arm placement" 
-                className="w-full h-full object-contain"
+                width={192}
+                height={192}
+                className="object-contain"
               />
             </div>
           </div>
@@ -64,10 +67,12 @@ export default function Step5Placement({
               Attach to waist belt
             </p>
             <div className="h-48 w-48 relative">
-              <img 
+              <Image 
                 src="/sensor/waist.png" 
                 alt="Waist placement" 
-                className="w-full h-full object-contain"
+                width={192}
+                height={192}
+                className="object-contain"
               />
             </div>
           </div>
@@ -86,10 +91,12 @@ export default function Step5Placement({
               Attach to right arm band
             </p>
             <div className="h-48 w-48 relative">
-              <img 
+              <Image 
                 src="/sensor/right.png" 
                 alt="Right arm placement" 
-                className="w-full h-full object-contain"
+                width={192}
+                height={192}
+                className="object-contain"
               />
             </div>
           </div>

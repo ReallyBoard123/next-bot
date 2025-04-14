@@ -85,7 +85,7 @@ export default function StartMeasurement() {
           setError('Failed to create measurement session');
           return;
         }
-      } catch (err) {
+      } catch {
         setError('Network error when creating session');
         return;
       }
@@ -104,8 +104,8 @@ export default function StartMeasurement() {
             stepType: steps[currentStep].id,
           }),
         });
-      } catch (err) {
-        console.error('Error recording step:', err);
+      } catch {
+        console.error('Error recording step');
         // Continue anyway - non-critical error
       }
     }

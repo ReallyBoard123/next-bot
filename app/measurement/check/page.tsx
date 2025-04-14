@@ -40,7 +40,7 @@ export default function CheckStatus() {
       // Record time of check
       const now = new Date();
       setLastChecked(`${now.toLocaleDateString()} ${now.toLocaleTimeString()}`);
-    } catch (error) {
+    } catch {
       setCheckStatus('error');
     }
   };

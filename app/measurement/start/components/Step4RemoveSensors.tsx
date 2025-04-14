@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { SensorDock } from '@/components/SensorDock';
 import { SensorSet, SensorUnit } from '@/components/SensorUnit';
 import { LightStatus } from '@/components/LightIndicator';
-import { Check, AlertCircle, ArrowLeft } from 'lucide-react';
+import { AlertCircle, ArrowLeft } from 'lucide-react';
 import { DraggableSensorUnit } from '@/components/DraggableSensorUnit';
 
 interface Person {
@@ -190,7 +190,7 @@ export default function Step4RemoveSensors({
                 <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-medium">Sensors not ready</p>
-                  <p className="text-sm">Please return sensors to the dock and try again. If sensors show orange after removing, that's also acceptable.</p>
+                  <p className="text-sm">Please return sensors to the dock and try again. If sensors show orange after removing, that&apos;s also acceptable.</p>
                 </div>
               </div>
             )}

@@ -25,7 +25,7 @@ export default function StartComplete() {
           <CardContent>
             <p className="mb-6">
               Your sensors are now active and collecting data. Keep them in place 
-              until you're ready to end the measurement session.
+              until you&apos;re ready to end the measurement session.
             </p>
             
             <div className="bg-blue-50 p-4 rounded-md mb-4 text-left">
